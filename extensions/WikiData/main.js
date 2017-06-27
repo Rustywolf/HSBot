@@ -4,7 +4,7 @@ var Response = require('./Response.js');
 var MESSAGE_REGEX = /\[([^\[]*?)\]/g;
 
 const KEYWORDS = [
-    "Adapt", "Battlecry", "Charge", "Choose One", "Combo", "Counter", "Deathrattle", "Discover", "Divine Shield", "Enrage", "Freeze", "Immune", "Inspire", "Mega-Windfury", "Overload", "Poisonous", "Quest", "Reward", "Secret", "Silence", "Stealth", "Spell Damage \\+(\\d+)", "Taunt", "Windfury", "Hero Power"
+    "Adapt", "Battlecry", "Charge", "Choose One", "Combo", "Counter", "Deathrattle", "Discover", "Divine Shield", "Enrage", "Freeze", "Immune", "Inspire", "Mega-Windfury", "Overload", "Poisonous", "Quest", "Reward", "Secret", "Silence", "Stealth", "Spell Damage \\+(\\d+)", "Taunt", "Windfury", "Hero Power", "Auto-Attack"
 ];
 
 const KEYWORDS_REGEX = new RegExp("(" + KEYWORDS.join("|") + ")", "gi");
@@ -26,7 +26,7 @@ var exports = module.exports = function WikiData(bot) {
             var results = [];
 
             while ((result = MESSAGE_REGEX.exec(message.content))) {
-                results.push(result);
+                results.push(result[1].replace(/Pot of Greed/i, "Arcane Intellect"));
             }
 
             results = results.filter(function (value, index, self) {
@@ -40,7 +40,7 @@ var exports = module.exports = function WikiData(bot) {
             }, results.length);
 
             results.forEach(function (val) {
-                var cardName = val[1];
+                var cardName = val;
                 bot.log("Processing: " + cardName + " <" + message.guild.name + ":" + message.guild.id + ":" + message.author.username + ">");
                 database.search(cardName, function (entry) {
                     var embed = bot.createEmbed();

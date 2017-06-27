@@ -3,7 +3,7 @@ var difflib = require('difflib');
 var cheerio = require('cheerio');
 
 const URL = 'hearthstone.gamepedia.com';
-const SEARCH = '/api.php?format=json&action=query&list=search&srsearch=incategory:Card_Data%20';
+const SEARCH = '/api.php?format=json&action=query&list=search&srsearch=incategory:All_Card_Data%20';
 
 const MATCH_RATIO = 0.5;
 
@@ -69,7 +69,7 @@ var exports = module.exports = function Database(bot) {
             if (e) {
                 bot.exception(e);
             } else {
-                var $ = cheerio.load(res.replace("Un'Goro", "UnGoro"));
+                var $ = cheerio.load(res);
 
                 var infobox = $('.stdinfobox').first();
                 if (infobox.length) {
