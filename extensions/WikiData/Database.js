@@ -3,7 +3,7 @@ var difflib = require('difflib');
 var cheerio = require('cheerio');
 
 const URL = 'hearthstone.gamepedia.com';
-const SEARCH = '/api.php?format=json&action=query&list=search&srsearch=';
+const SEARCH = '/api.php?format=json&action=query&list=search&srsearch=incategory:Card_Data%20';
 
 const MATCH_RATIO = 0.5;
 
@@ -83,7 +83,7 @@ var exports = module.exports = function Database(bot) {
                         entry[key] = value;
                     });
                     
-                    entry.text = $("<span>" + infobox.find('p').first().html().replace(/<br>/g, '. ') + "</span>").text();
+                    entry.text = $("<span>" + infobox.find('p').first().html().replace(/(\s*)<br>(\s*)/g, '. ') + "</span>").text();
 
                     callback(entry);
                 }
@@ -93,7 +93,7 @@ var exports = module.exports = function Database(bot) {
 
     this.search = function (name, callback) {
         search(name, function (data) {
-            parseCardData("/" + encodeURIComponent(data.title.replace(" ", "_")), callback);
+            parseCardData("/" + encodeURIComponent(data.title.replace(/ /g, "_")), callback);
         });
     }
 }

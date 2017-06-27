@@ -4,7 +4,7 @@ var Response = require('./Response.js');
 var MESSAGE_REGEX = /\[([^\[]*?)\]/g;
 
 const KEYWORDS = [
-    "Adapt", "Battlecry", "Charge", "Choose One", "Combo", "Counter", "Deathrattle", "Discover", "Divine Shield", "Enrage", "Freeze", "Immune", "Inspire", "Mega-Windfury", "Overload", "Poisonous", "Quest", "Reward", "Secret", "Silence", "Stealth", "Spell Damage \\+(\\d+)", "Taunt", "Windfury"  
+    "Adapt", "Battlecry", "Charge", "Choose One", "Combo", "Counter", "Deathrattle", "Discover", "Divine Shield", "Enrage", "Freeze", "Immune", "Inspire", "Mega-Windfury", "Overload", "Poisonous", "Quest", "Reward", "Secret", "Silence", "Stealth", "Spell Damage \\+(\\d+)", "Taunt", "Windfury", "Hero Power"
 ];
 
 const KEYWORDS_REGEX = new RegExp("(" + KEYWORDS.join("|") + ")", "gi");
