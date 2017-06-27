@@ -1,7 +1,7 @@
 var Database = require('./Database.js');
 var Response = require('./Response.js');
 
-var MESSAGE_REGEX = /\[(.*?)\]/g;
+var MESSAGE_REGEX = /\[([^\[]*?)\]/g;
 
 const KEYWORDS = [
     "Adapt", "Battlecry", "Charge", "Choose One", "Combo", "Counter", "Deathrattle", "Discover", "Divine Shield", "Enrage", "Freeze", "Immune", "Inspire", "Mega-Windfury", "Overload", "Poisonous", "Quest", "Reward", "Secret", "Silence", "Stealth", "Spell Damage \\+(\\d+)", "Taunt", "Windfury"  
@@ -22,6 +22,8 @@ var exports = module.exports = function WikiData(bot) {
         database = new Database(bot);
 
         bot.events.on('message', function (message) {
+            console.log(message.channel.id);
+            if (message.channel.id != "187922252560334870") return;
             var result = "";
             var results = [];
 
@@ -44,28 +46,26 @@ var exports = module.exports = function WikiData(bot) {
                 bot.log("Processing: " + cardName + " <" + message.guild.name + ":" + message.guild.id + ":" + message.author.username + ">");
                 database.search(cardName, function (entry) {
                     var embed = bot.createEmbed();
-                    if (entry.title && !entry.hero_power) {
+                    if (entry.title && (!entry.hero_power || entry.card_type == "Hero")) {
                         embed.setAuthor(entry.title, "https://puu.sh/wuRse/6fdffde22a.png");
                         embed.setThumbnail(entry.image);
 
-                        var heropower = entry.card_type && entry.card_type == "Hero Power";
+                        var heropower = entry.type && entry.type == "Hero Power";
 
                         var desc = "";
-                        if (entry.mana_crystals) {
-                            //desc += "<:mana:230133856987119616>`" + entry.mana_crystals + "`  ";
-                            desc += "<:Mana:328953872464740352>`" + entry.mana_crystals + "`  ";
+                        if (entry.cost) {
+                            desc += "<:Mana:328953872464740352>`" + entry.cost + "`";
                         }
                         if (entry.attack && entry.health) {
-                            //desc += "<:Attack:230132836974198786>`" + entry.attack + "`  <:Health:230132804799823872>`" + entry.health + "`";
-                            desc += "<:Attack:328953872074932224>`" + entry.attack + "`  <:Health:328953873278697472>`" + entry.health + "`";
+                            desc += "  <:Attack:328953872074932224>`" + entry.attack + "`  <:Health:328953873278697472>`" + entry.health + "`";
                         }
 
                         desc += "\n";
-                        if (entry.card_type) desc += "**Type**: " + entry.card_type + "\n";
+                        if (entry.type) desc += "**Type**: " + entry.type + "\n";
                         if (entry.class) desc += "**Class**: " + entry.class + "\n";
                         if (entry.rarity && !heropower) desc += "**Rarity**: " + entry.rarity + "\n";
                         if (entry.race && !heropower) desc += "**Race**: " + entry.race + "\n";
-                        if (entry.abilities) desc += "\n*" + entry.abilities.replace(KEYWORDS_REGEX, "**$1**") + "*";
+                        if (entry.text) desc += "\n*" + entry.text.replace(KEYWORDS_REGEX, "**$1**") + "*";
 
                         embed.setDescription(desc);
 
@@ -92,6 +92,8 @@ var exports = module.exports = function WikiData(bot) {
                         } else {
                             embed.setColor("#ffffff");
                         }
+                        
+                        if (entry.set) embed.setFooter("Set: " + entry.set);
 
                         response.handle(embed);
                     }
