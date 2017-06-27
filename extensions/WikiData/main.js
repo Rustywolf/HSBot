@@ -22,8 +22,6 @@ var exports = module.exports = function WikiData(bot) {
         database = new Database(bot);
 
         bot.events.on('message', function (message) {
-            console.log(message.channel.id);
-            if (message.channel.id != "187922252560334870") return;
             var result = "";
             var results = [];
 
